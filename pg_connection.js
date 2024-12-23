@@ -2,7 +2,7 @@ import pg from 'pg';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const pngPool = new pg.Pool({
+const pgPool = new pg.Pool({
     host: process.env.PG_HOSTM,
     port: process.env.PG_PORT,
     database: process.env.PG_DB,
@@ -10,4 +10,4 @@ const pngPool = new pg.Pool({
     password: process.env.PG_PW,
 })
 
-export {pngPool};
+export {pgPool};
