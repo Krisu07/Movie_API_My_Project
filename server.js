@@ -10,7 +10,7 @@ app.listen(3001, ()=>{
 app.get('/User', async (req,res) => {
 
     try {
-        const result= await pgPool.query('SELECT * FROM User');
+        const result= await pgPool.query('SELECT * FROM "User"');
         res.json(result.rows);
     } catch (error) {
         res.status(400).json({error: error.message});
