@@ -8,38 +8,11 @@
 </head>
 <body>
 
-
-    <script>
-        document.getElementById("button").addEventListener("click", function(){
-            document.querySelector(".popup").style.display = "flex";
-        })
-        document.querySelector(".close").addEventListener("click", function(){
-            document.querySelector(".popup").style.display = "none";
-        })
-    </script>
-
-    <div class="container">
-        <nav>
-            <ul>
-                <li><button type="button", id="search">⪩ ⪨Search⪩ ⪨</button></li>
-            </ul>
-        </nav>
-        
+    <div class="main_container">
+        <img src="../Movie_API_My_Project/kuvat/Kitty w my melody.jpeg" id="kitty" style="width: 500px; height: 500px; position: static ;">
         <h1>⪩ ⪨Welcome to Movies Control Website!⪩ ⪨</h1>
-        <button type="button" href="#", class="button", id="button">⪩ ⪨Edit Movie⪩ ⪨</button>
+        <p>⪩ ⪨Here you can controll movies data and search for your favourite movies! :3 ⪩ ⪨</p>
     </div>
-
-    <div class="popup">
-        <div class="popup-content">
-            <img src="../Movie_API_My_Project/kuvat/close.png" alt="close" class="close">
-            <img src="../Movie_API_My_Project/kuvat/Kitty w my melody.jpeg" alt="kitty" class="kitty_pic">
-            <input type="text" placeholder="Movie Name">
-            <input type="number" placeholder="Movie Release Year">
-            
-        </div>
-    </div>
-
-
 
 </body>
 </html>
