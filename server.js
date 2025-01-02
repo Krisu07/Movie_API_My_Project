@@ -17,3 +17,24 @@ app.get('/users', async (req,res) => {
     }
 
 });
+
+app.get('/movies', async (req,res) => {
+
+    try {
+        const result= await pgPool.query('SELECT * FROM "movies"');
+        res.json(result.rows);
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+
+});
+app.get('/genres', async (req,res) => {
+
+    try {
+        const result= await pgPool.query('SELECT * FROM "genres"');
+        res.json(result.rows);
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+
+});
