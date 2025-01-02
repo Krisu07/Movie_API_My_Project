@@ -3,7 +3,7 @@ import { pgPool } from './pg_connection.js';
 
 const app = express();
 
-app.listen(3001, ()=>{
+app.listen(3002, ()=>{
     console.log('Server is running');
 });
 
