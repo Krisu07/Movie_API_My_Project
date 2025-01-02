@@ -7,10 +7,10 @@ app.listen(3001, ()=>{
     console.log('Server is running');
 });
 
-app.get('/User', async (req,res) => {
+app.get('/users', async (req,res) => {
 
     try {
-        const result= await pgPool.query('SELECT * FROM "User"');
+        const result= await pgPool.query('SELECT * FROM "users"');
         res.json(result.rows);
     } catch (error) {
         res.status(400).json({error: error.message});
