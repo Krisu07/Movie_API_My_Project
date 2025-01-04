@@ -88,13 +88,17 @@ app.get('/movies', async (req, res) => {
 
 // 7. Search movies by keyword
 app.get('/movies/search', async (req, res) => {
-    const { keyword } = req.query;
+    const { keyword } = req.query; // Retrieve the keyword query parameter
+    if (!keyword) {
+        return res.status(400).json({ error: "Keyword is required" });
+    }
     try {
+        // Use ILIKE for case-insensitive search and % for partial matching
         const result = await pgPool.query(
             'SELECT * FROM movies WHERE name ILIKE $1',
-            [`%${keyword}%`]
+            [`%${keyword}%`]  // Wrap the keyword with wildcards
         );
-        res.json(result.rows);
+        res.json(result.rows);  // Return the search results
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
