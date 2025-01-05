@@ -4,7 +4,14 @@ import { pgPool } from './pg_connection.js';
 const app = express();
 app.use(express.json());
 
-// 1. Add new genre
+const PORT = process.env.PORT || 3003;
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
+
+
+// uuden genren lisäys
 app.post('/genres', async (req, res) => {
     const { name } = req.body;
     try {
@@ -15,7 +22,7 @@ app.post('/genres', async (req, res) => {
     }
 });
 
-// 2. Add new movie
+// uuden elokuvan lisäys
 app.post('/movies', async (req, res) => {
     const { name, year, genreid } = req.body;
     try {
@@ -29,7 +36,7 @@ app.post('/movies', async (req, res) => {
     }
 });
 
-// 3. Register user
+// 3. uuden käyttäjän rekistöröityminen
 app.post('/users', async (req, res) => {
     const { name, username, password, yearofbirth } = req.body;
     try {
@@ -43,7 +50,7 @@ app.post('/users', async (req, res) => {
     }
 });
 
-// 4. Get movie by ID
+// 4. hae elokuva id:n avulla
 app.get('/movies/:id', async (req, res) => {
     const { id } = req.params;
     try {
@@ -58,7 +65,7 @@ app.get('/movies/:id', async (req, res) => {
     }
 });
 
-// 5. Remove movie by ID
+// 5. poista elokuva id:n avulla
 app.delete('/movies/:id', async (req, res) => {
     const { id } = req.params;
     try {
@@ -73,7 +80,7 @@ app.delete('/movies/:id', async (req, res) => {
     }
 });
 
-// 6. Paginate movies
+// 6. saa vain 10 elokuvaa sivulle
 app.get('/movies', async (req, res) => {
     const { page = 1 } = req.query; // Default page = 1
     const limit = 10;
@@ -86,31 +93,52 @@ app.get('/movies', async (req, res) => {
     }
 });
 
-// 7. Search movies by keyword
+// 7. hae elokuva avain sanalla
 app.get('/movies/search', async (req, res) => {
-    const { keyword } = req.query; // Retrieve the keyword query parameter
-    if (!keyword) {
-        return res.status(400).json({ error: "Keyword is required" });
+    const { keyword } = req.query;
+
+    if (!keyword || typeof keyword !== 'string' || keyword.trim().length === 0) {
+        return res.status(400).json({ error: 'Keyword must be a non-empty string' });
     }
+
+    const trimmedKeyword = keyword.trim();
+
     try {
-        // Use ILIKE for case-insensitive search and % for partial matching
-        const result = await pgPool.query(
-            'SELECT * FROM movies WHERE name ILIKE $1',
-            [`%${keyword}%`]  // Wrap the keyword with wildcards
-        );
-        res.json(result.rows);  // Return the search results
+        const query = `
+            SELECT movies.*
+            FROM movies
+            LEFT JOIN genres ON movies.genre_id = genres.genre_id
+            WHERE movies.searchkeyword ILIKE $1
+            OR movies.name ILIKE $1
+            OR movies.year::text ILIKE $1
+            OR genres.name ILIKE $1;
+        `;
+
+        const result = await pgPool.query(query, [`%${trimmedKeyword}%`]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: 'No movies found for the given keyword' });
+        }
+
+        res.json(result.rows);
+
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        console.error('Error executing query:', error.message);
+        res.status(500).json({ error: error.message });
     }
 });
-
-// 8. Add movie review
+// 8. lisää elokuva review
 app.post('/reviews', async (req, res) => {
-    const { username, stars, review_text, movieid } = req.body;
+    const { userid, stars, reviewtext, movieid } = req.body;
+    
+    if (!userid || !stars || !movieid) {
+        return res.status(400).json({ error: "User ID, stars, and movie ID are required" });
+    }
+    
     try {
         const result = await pgPool.query(
-            'INSERT INTO reviews (username, stars, reviewtext, movieid) VALUES ($1, $2, $3, $4) RETURNING *',
-            [username, stars, reviewtext, movieid]
+            'INSERT INTO reviews (userid, stars, reviewtext, movieid) VALUES ($1, $2, $3, $4) RETURNING *',
+            [userid, stars, reviewtext, movieid]
         );
         res.status(201).json(result.rows[0]);
     } catch (error) {
@@ -118,7 +146,7 @@ app.post('/reviews', async (req, res) => {
     }
 });
 
-// 9. Add favorite movies
+// 9. lisää suosikki elokuvia
 app.post('/favorites', async (req, res) => {
     const { userid, movieid } = req.body;
     try {
@@ -126,13 +154,14 @@ app.post('/favorites', async (req, res) => {
             'INSERT INTO favorites (userid, movieid) VALUES ($1, $2) RETURNING *',
             [userid, movieid]
         );
-        res.status(201).json(result.rows[0]);
+        res.status(201).json(result.rows[0]); // Return the new favorite movie
     } catch (error) {
+        console.error('Error adding favorite movie:', error);
         res.status(400).json({ error: error.message });
     }
 });
 
-// 10. Get favorite movies by username
+// 10. Hae elokuva käyttäjänimen avulla
 app.get('/favorites/:username', async (req, res) => {
     const { username } = req.params;
     try {
@@ -150,6 +179,11 @@ app.get('/favorites/:username', async (req, res) => {
     }
 });
 
-app.listen(3003, () => {
-    console.log('Server is running on port 3003');
+//error prevent code
+process.on('uncaughtException', (err) => {
+    console.error("Uncaught Exception:", err);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error("Unhandled Rejection at:", promise, "reason:", reason);
 });
