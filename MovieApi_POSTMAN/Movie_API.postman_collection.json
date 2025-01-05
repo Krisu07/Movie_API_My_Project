@@ -1,0 +1,223 @@
+{
+	"info": {
+		"_postman_id": "21a28f42-bb7f-4358-9a11-3798c772cdf2",
+		"name": "Movie_API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "40739807",
+		"_collection_link": "https://movieapikristakorentotik23sp-7575.postman.co/workspace/a30bd35c-4b25-441d-8734-667910b59337/collection/40739807-21a28f42-bb7f-4358-9a11-3798c772cdf2?action=share&source=collection_link&creator=40739807"
+	},
+	"item": [
+		{
+			"name": "GetAllMovies",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3003/movies"
+			},
+			"response": []
+		},
+		{
+			"name": "GetMovie by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3003/api/movies/?id={{movieid}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"api",
+						"movies",
+						""
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{movieid}}"
+						},
+						{
+							"key": null,
+							"value": "2",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddNewMovie",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Twilight\",\r\n    \"year\": \"2008\",\r\n    \"genreid\": \"Romance\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3004/movies"
+			},
+			"response": []
+		},
+		{
+			"name": "AddNewGenre",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Romance Comedy\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3003/genres"
+			},
+			"response": []
+		},
+		{
+			"name": "RegisterNewUser",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Mariel Strawberry\",\r\n  \"username\": \"MarielStrawberry\",\r\n  \"password\": \"securepassword123\",\r\n  \"yearofbirth\": 1990\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3003/users"
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteMovie by ID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": "http://localhost:3003/movies/1"
+			},
+			"response": []
+		},
+		{
+			"name": "SearchMovie by Keyword",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3003/movies/search?keyword=romance",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"movies",
+						"search"
+					],
+					"query": [
+						{
+							"key": "keyword",
+							"value": "romance"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddReview to Movie",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userid\": 1,\r\n    \"stars\": 4,\r\n    \"reviewtext\": \"Great movie with an amazing plot!\",\r\n    \"movieid\": 1\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3003/reviews"
+			},
+			"response": []
+		},
+		{
+			"name": "AddFavouriteMovies by User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userid\": 3,\r\n    \"movieid\": 3\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3003/favorites"
+			},
+			"response": []
+		},
+		{
+			"name": "GetFavouriteMovie by Username",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3003/favorites/mikejohnson"
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllMovies only 10",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3003/movies?page=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"movies"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
